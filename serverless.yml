@@ -1,0 +1,54 @@
+#name would be prefixed to all the functions
+service: rx-monitoring-api
+
+provider:
+  name: aws
+  runtime: nodejs14.x
+  stage: dev
+  region: us-east-2
+  lambdaHashingVersion: "20201221"
+  environment: 
+    DYNAMODB_TABLE_NAME: ${self:custom.rxMonitoringLogTableName}
+  
+
+custom: 
+    rxMonitoringLogTableName: rx-monitoring-table
+
+plugins:
+  - serverless-iam-roles-per-function    
+
+functions:
+  patientReport:
+    handler: src/rx-monitoring-controller.patientReport
+    name: patient-report
+    memorySize: 128 # mb
+    timeout: 10  # seconds
+    events:
+      - http:
+          path: rx-monitoring/patient-report
+          method: POST
+    iamRoleStatements:
+      - Effect: "Allow"
+        Action: 
+          - "dynamodb:PutItem"
+        Resource: !GetAtt RxMonitoringLogTable.Arn
+
+resources:
+  Resources:
+    RxMonitoringLogTable:
+      Type: AWS::DynamoDB::Table
+      Properties:
+        TableName: ${self:custom.rxMonitoringLogTableName}
+        AttributeDefinitions:
+          - AttributeName: "logId"
+            AttributeType: "S"
+        KeySchema:
+          - AttributeName: "logId"
+            KeyType: "HASH"
+        ProvisionedThroughput:
+          ReadCapacityUnits: 1
+          WriteCapacityUnits: 1
+        
+
+
+        

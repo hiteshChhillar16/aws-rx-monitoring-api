@@ -1,0 +1,22 @@
+{
+  "name": "rx-monitoring-api",
+  "version": "1.0.0",
+  "description": "AWS RxMonitoring Service",
+  "main": "handler.js",
+  "scripts": {
+    "test": "jest"
+  },
+  "keywords": [],
+  "author": "Hitesh Chhillar",
+  "license": "ISC",
+  "dependencies": {
+    "@aws-sdk/client-dynamodb": "^3.87.0",
+    "@aws-sdk/util-dynamodb": "^3.87.0",
+    "serverless-iam-roles-per-function": "^3.2.0"
+  },
+  "devDependencies": {
+    "@shelf/jest-dynamodb": "^1.8.1",
+    "aws-sdk-mock": "^5.2.1",
+    "jest": "^27.0.6"
+  }
+}
